@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ítallo Istarley — Portfólio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root[data-theme="dark"] {
+      --bg:        #0a0a0f;
+      --bg2:       #111118;
+      --bg3:       #18181f;
+      --border:    #2a2a35;
+      --text:      #e8e8f0;
+      --muted:     #6b6b80;
+      --accent:    #1e3a8a;
+      --accent2:   #60a5fa;
+      --tag-bg:    #1e1e2a;
+    }
+    :root[data-theme="light"] {
+      --bg:        #f4f4f8;
+      --bg2:       #ffffff;
+      --bg3:       #eaeaf0;
+      --border:    #d0d0de;
+      --text:      #1a1a2e;
+      --muted:     #707088;
+      --accent:    #2563eb;
+      --accent2:   #4f46e5;
+      --tag-bg:    #e2e2f0;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 60px; 
+    }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    a { color: var(--accent2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* =============================================
+       EFEITO DE SCROLL (CSS Básico para ser ativado pelo JS)
+    ============================================= */
+    .scroll-section {
+      /* Começa levemente transparente e menor */
+      opacity: 0.2;
+      transform: scale(0.95);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    
+    /* Quando o JS adicionar essa classe, a seção ganha destaque */
+    .scroll-section.in-focus {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* =============================================
+       MENU SUPERIOR FIXO
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      transition: background 0.4s;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent2); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    #theme-toggle:hover { color: var(--accent2); border-color: var(--accent2); }
+
+    #menu-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+    #menu-toggle span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    #menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    #menu-toggle.open span:nth-child(2) { opacity: 0; }
+    #menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    #mobile-menu {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 60px; left: 0; right: 0;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      gap: 1.2rem;
+      z-index: 99;
+    }
+    #mobile-menu.open { display: flex; }
+    #mobile-menu a {
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    #mobile-menu a:hover { color: var(--accent2); text-decoration: none; }
+
+    /* =============================================
+       ESTRUTURA DAS SEÇÕES
+    ============================================= */
+    main { padding-top: 60px; }
+
+    section {
+      padding: 6rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 2.5rem;
+    }
+
+    /* =============================================
+       SOBRE MIM (Início)
+    ============================================= */
+    #sobre {
+      min-height: calc(100vh - 60px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 4rem;
+    }
+
+    .hero-greeting { font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1rem; }
+    .hero-name { font-family: 'Bebas Neue', sans-serif; font-size: clamp(4.5rem, 13vw, 9rem); font-weight: 400; line-height: 0.9; letter-spacing: 0.04em; margin-bottom: 1.4rem; }
+    .hero-name .accent { color: var(--accent2); }
+    .hero-bio { max-width: 580px; color: var(--muted); font-size: 0.92rem; margin-bottom: 2.5rem; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.5rem; }
+    .tag { background: var(--tag-bg); border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 3px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.05em; }
+
+    .hero-links { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 0.6rem 1.4rem; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s, transform 0.2s; text-decoration: none; }
+    .btn:hover { opacity: 0.8; transform: translateY(-1px); text-decoration: none; }
+    .btn-primary { background: var(--accent); color: #fff; border: none; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+
+    /* =============================================
+       FORMAÇÃO
+    ============================================= */
+    .edu-item { display: grid; grid-template-columns: 80px 1fr; gap: 1.2rem; padding: 1.5rem 0; border-bottom: 1px solid var(--border); }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-year { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.08em; padding-top: 4px; }
+    .edu-body h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .edu-body p { font-size: 0.82rem; color: var(--muted); }
+
+    .lang-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .lang-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 1.2rem; }
+    .lang-card h4 { font-family: 'Syne', sans-serif; font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .lang-card span { font-size: 0.75rem; color: var(--accent2); }
+
+    /* =============================================
+       PORTFÓLIO
+    ============================================= */
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+    .proj-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 1.5rem; transition: border-color 0.2s, transform 0.2s; }
+    .proj-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+    .proj-card .proj-number { font-size: 0.65rem; color: var(--accent2); letter-spacing: 0.15em; margin-bottom: 0.8rem; }
+    .proj-card h3 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .proj-card p { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; line-height: 1.6; }
+    .proj-card .proj-link { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); }
+    .proj-card .proj-link:hover { text-decoration: underline; }
+
+    /* =============================================
+       CONTATO
+    ============================================= */
+    .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; }
+    .contact-info p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .contact-info a { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .contact-info a:hover { color: var(--accent2); text-decoration: none; }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+    .form-group input, .form-group textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 4px; padding: 0.7rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--text); transition: border-color 0.2s; outline: none; }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group input.error, .form-group textarea.error { border-color: #e05555; }
+    .form-group .err-msg { font-size: 0.7rem; color: #e05555; margin-top: 0.3rem; display: none; }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+
+    #btn-enviar { background: var(--accent); border: none; color: #fff; padding: 0.7rem 1.6rem; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+    #btn-enviar:hover { opacity: 0.85; }
+
+    /* Modal de feedback */
+    #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 200; align-items: center; justify-content: center; }
+    #modal-overlay.show { display: flex; }
+    #modal-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 2.5rem; max-width: 380px; text-align: center; }
+    #modal-box .modal-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    #modal-box h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; margin-bottom: 0.6rem; }
+    #modal-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; }
+    #modal-close { background: var(--accent); border: none; color: #fff; padding: 0.5rem 1.4rem; border-radius: 4px; font-family: 'DM Mono', monospace; font-size: 0.78rem; cursor: pointer; }
+
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 2rem; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; }
+
+    @media (max-width: 700px) {
+      .nav-links { display: none; }
+      #menu-toggle { display: flex; }
+      .contact-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      section { padding: 4rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">Í<span>.</span>Istarley</div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#sobre" class="active">Sobre mim</a></li>
+      <li><a href="#formacao">Formação</a></li>
+      <li><a href="#portfolio">Portfólio</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+    <div class="nav-controls">
+      <button id="theme-toggle" aria-label="Alternar tema">☾ escuro</button>
+      <button id="menu-toggle" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div id="mobile-menu">
+    <a href="#sobre" class="mobile-link">Sobre mim</a>
+    <a href="#formacao" class="mobile-link">Formação</a>
+    <a href="#portfolio" class="mobile-link">Portfólio</a>
+    <a href="#contato" class="mobile-link">Contato</a>
+  </div>
+
+  <main>
+    <section id="sobre" class="scroll-section">
+      <p class="hero-greeting">// olá, mundo</p>
+      <h1 class="hero-name">Ítallo<br><span class="accent">Istarley</span></h1>
+      <p class="hero-bio">
+        Estudante de Ciências da Computação com grande afinidade pela área de tecnologia.
+        Apaixonado por banco de dados, Python e sempre em busca de expandir o conhecimento —
+        com o olho no horizonte da análise de dados e do desenvolvimento de jogos.
+      </p>
+
+      <div class="tags">
+        <span class="tag">⚽ Futebol</span>
+        <span class="tag">🏋️ Academia</span>
+        <span class="tag">🎮 FPS &amp; MMORPG</span>
+        <span class="tag">🎌 Anime</span>
+        <span class="tag">🖥️ Montagem de PCs</span>
+        <span class="tag">📊 Análise de Dados</span>
+        <span class="tag">🎲 Game Dev</span>
+        <span class="tag">🐍 Python</span>
+      </div>
+
+      <div class="hero-links">
+        <a href="#contato" class="btn btn-primary">Entrar em contato</a>
+        <a href="#portfolio" class="btn btn-outline">Ver portfólio</a>
+      </div>
+    </section>
+
+    <section id="formacao" class="scroll-section">
+      <p class="section-label">// 02. formação</p>
+      <h2 class="section-title">Educação &amp;<br>Certificações</h2>
+
+      <div class="edu-item">
+        <div class="edu-year">atual</div>
+        <div class="edu-body">
+          <h3>Ciências da Computação</h3>
+          <p>Centro Universitário UNINTER — Bacharelado em andamento</p>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-year">concluído</div>
+        <div class="edu-body">
+          <h3>Design Gráfico</h3>
+          <p>Curso técnico — concluído com foco em criação visual e identidade de marca</p>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-year">concluído</div>
+        <div class="edu-body">
+          <h3>Informática Completa</h3>
+          <p>Formação abrangente em ferramentas, sistemas operacionais e produtividade</p>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="edu-year">concluído</div>
+        <div class="edu-body">
+          <h3>TI + Programação</h3>
+          <p>Fundamentos de infraestrutura de TI aliados à introdução à programação</p>
+        </div>
+      </div>
+
+      <div class="lang-grid">
+        <div class="lang-card">
+          <h4>Português</h4>
+          <span>Fluente — nativo</span>
+        </div>
+        <div class="lang-card">
+          <h4>Inglês</h4>
+          <span>Avançado</span>
+        </div>
+      </div>
+    </section>
+<section id="portfolio" class="scroll-section">
+      <p class="section-label">// 03. portfólio</p>
+      <h2 class="section-title">Projetos &amp;<br>Trabalhos</h2>
+
+      <div class="proj-grid">
+        <div class="proj-card">
+          <p class="proj-number">001</p>
+          <h3>Portfólio Pessoal</h3>
+          <p>
+            Este próprio site — desenvolvido do zero com HTML5, CSS3 puro e JavaScript vanilla,
+            sem o uso de nenhum framework externo. Foco em manipulação do DOM e navegação fluida em Single Page.
+          </p>
+          <a href="https://github.com/italloi" class="proj-link" target="_blank">Ver repositório →</a>
+        </div>
+
+        <div class="proj-card">
+          <p class="proj-number">002</p>
+          <h3>IAtify (Integração Spotify)</h3>
+          <p>
+            Projeto técnico voltado para a automação de recomendações musicais. 
+            Desenvolvi uma integração customizada conectando inteligência artificial diretamente à API oficial do Spotify.
+          </p>
+          <a href="https://github.com/italloi/IAtify" class="proj-link" target="_blank">Ver repositório →</a>
+        </div>
+
+        <div class="proj-card">
+          <p class="proj-number">003</p>
+          <h3>Desafio StartDB-2025</h3>
+          <p>
+            Sistema desenvolvido em JavaScript focado na gestão de um abrigo de animais.
+            O projeto envolveu a estruturação de toda a lógica de backend e resolução de problemas estruturais propostos no desafio.
+          </p>
+          <a href="https://github.com/italloi/desafio-italloi-2025" class="proj-link" target="_blank">Ver código →</a>
+        </div>
+
+        <div class="proj-card">
+          <p class="proj-number">004</p>
+         <h3>Documentação (PlantUML)</h3>
+          <p>
+           Modelagem de sistemas utilizando a linguagem PlantUML. 
+          Desenvolvimento de diagramas de Caso de Uso e Fluxo para documentar a arquitetura técnica do projeto IAtify.
+         </p>
+         <a href="https://github.com/italloi/IAtify-Docs" class="proj-link" target="_blank">Ver documentação →</a>
+      </div>
+    </section>
+
+    <section id="contato" class="scroll-section">
+      <p class="section-label">// 04. contato</p>
+      <h2 class="section-title">Vamos<br>Conversar?</h2>
+
+      <div class="contact-layout">
+        <div class="contact-info">
+          <p>
+            Aberto a oportunidades, colaborações e bate-papo sobre tecnologia,
+            jogos ou análise de dados. Pode me chamar!
+          </p>
+          <a href="mailto:italloistarley1@gmail.com">✉ italloistarley1@gmail.com</a>
+          <a href="https://www.linkedin.com/in/itallo-istarley-89a140379/?skipRedirect=true" target="_blank" rel="noopener">↗ LinkedIn</a>
+          <a href="https://github.com/italloi" target="_blank" rel="noopener">↗ GitHub</a>
+        </div>
+
+        <form id="contact-form" novalidate>
+          <div class="form-group">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" />
+            <span class="err-msg" id="err-nome">Por favor, preencha seu nome.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" />
+            <span class="err-msg" id="err-email">Ops, informe um e-mail válido.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="mensagem">Mensagem</label>
+            <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem..."></textarea>
+            <span class="err-msg" id="err-mensagem">A mensagem não pode ficar vazia.</span>
+          </div>
+
+          <button type="submit" id="btn-enviar">Enviar mensagem</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Ítallo Istarley Oliveira de Souza — Feito com HTML5, CSS3 &amp; JavaScript
+  </footer>
+
+  <div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-box">
+      <div class="modal-icon">✓</div>
+      <h3 id="modal-title">Mensagem enviada!</h3>
+      <p>Obrigado pelo contato, responderei o mais rápido possível.</p>
+      <button id="modal-close">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    // Configuração de Tema Escuro/Claro
+    const btnTema = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
+    const temaSalvo = localStorage.getItem('theme') || 'dark';
+    
+    htmlEl.setAttribute('data-theme', temaSalvo);
+    btnTema.textContent = temaSalvo === 'dark' ? '☀ claro' : '☾ escuro';
+
+    btnTema.addEventListener('click', () => {
+      const atual = htmlEl.getAttribute('data-theme');
+      const proximo = atual === 'dark' ? 'light' : 'dark';
+      htmlEl.setAttribute('data-theme', proximo);
+      btnTema.textContent = proximo === 'dark' ? '☀ claro' : '☾ escuro';
+      localStorage.setItem('theme', proximo);
+    });
+
+    // Menu Mobile
+    const btnMenu = document.getElementById('menu-toggle');
+    const menuMobile = document.getElementById('mobile-menu');
+
+    btnMenu.addEventListener('click', () => {
+      btnMenu.classList.toggle('open');
+      menuMobile.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        btnMenu.classList.remove('open');
+        menuMobile.classList.remove('open');
+      });
+    });
+
+    // ==========================================
+    // Efeito de foco na seção central da tela
+    // ==========================================
+    const secoes = document.querySelectorAll('.scroll-section');
+    const linksMenu = document.querySelectorAll('.nav-links a');
+
+    // Cria um observador para ver o que está no centro da tela
+    const observerFoco = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Quando a seção entra na área central, aplica opacidade 100%
+          entry.target.classList.add('in-focus');
+          
+          // Aproveita para marcar o link do menu correspondente como ativo
+          linksMenu.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        } else {
+          // Quando a seção sai da área central, volta a ficar transparente
+          entry.target.classList.remove('in-focus');
+        }
+      });
+    }, {
+      // Cria uma "janela" imaginária de foco no meio da tela.
+      // Ignora os 30% do topo e os 30% de baixo da tela.
+      rootMargin: "-30% 0px -30% 0px" 
+    });
+
+    // Manda o JS observar todas as seções
+    secoes.forEach(sec => observerFoco.observe(sec));
+
+
+    // Validação de Formulário
+    const form = document.getElementById('contact-form');
+    const modal = document.getElementById('modal-overlay');
+    const btnFecharModal = document.getElementById('modal-close');
+
+    function validaEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function manipulaErro(idInput, idErro, temErro) {
+      const input = document.getElementById(idInput);
+      const msg = document.getElementById(idErro);
+      if (temErro) {
+        input.classList.add('error');
+        msg.style.display = 'block';
+      } else {
+        input.classList.remove('error');
+        msg.style.display = 'none';
+      }
+      return !temErro;
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mensagem = document.getElementById('mensagem').value.trim();
+
+      const nomeOk = manipulaErro('nome', 'err-nome', nome === '');
+      const emailOk = manipulaErro('email', 'err-email', !validaEmail(email));
+      const msgOk = manipulaErro('mensagem', 'err-mensagem', mensagem === '');
+
+      if (nomeOk && emailOk && msgOk) {
+        const btn = document.getElementById('btn-enviar');
+        const textoOriginal = btn.textContent;
+        
+        btn.textContent = "Enviando...";
+        btn.style.opacity = "0.7";
+
+        setTimeout(() => {
+          form.reset();
+          btn.textContent = textoOriginal;
+          btn.style.opacity = "1";
+          modal.classList.add('show');
+        }, 1000);
+      }
+    });
+
+    btnFecharModal.addEventListener('click', () => modal.classList.remove('show'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('show'); });
+
+  </script>
+</body>
+</html>
